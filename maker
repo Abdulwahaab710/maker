@@ -1,0 +1,33 @@
+#!/usr/bin/env ruby
+require 'json'
+require 'base64'
+
+@json_file = ''
+MAKEFILE_JSON_FILE = 'make.json'
+
+def lang
+  ARGV[0]
+end
+
+def read_file
+  file =  File.read(MAKEFILE_JSON_FILE)
+  @json_file = JSON.parse(file)
+end
+
+def makefile_path
+  return 'Makefile' if ARGV[1].nil?
+  "#{ARGV[1]}/Makefile"
+end
+
+def make_makefile
+  read_file
+  makefile = File.open(makefile_path, 'w')
+  makefile << Base64.decode64(@json_file[lang])
+  makefile.close
+end
+
+def add_makefile
+  # maker --add --lang=c Makefile
+end
+
+make_makefile
